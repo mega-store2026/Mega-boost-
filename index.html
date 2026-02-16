@@ -1,0 +1,537 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Stylish Nickname Maker</title>
+
+  <!-- Google Font -->
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+
+  <!-- Font Awesome Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
+
+  <style>
+    *{
+      margin:0;
+      padding:0;
+      box-sizing:border-box;
+      font-family: 'Poppins', sans-serif;
+    }
+
+    body{
+      background:#f5f6fa;
+      padding-bottom:100px;
+    }
+
+    /* Header */
+    header{
+      background: linear-gradient(90deg, #6a11cb, #2575fc);
+      padding: 18px 15px;
+      border-bottom-left-radius: 18px;
+      border-bottom-right-radius: 18px;
+      box-shadow: 0px 8px 20px rgba(0,0,0,0.12);
+      position: sticky;
+      top: 0;
+      z-index: 999;
+    }
+
+    .app-title{
+      color:#fff;
+      font-size:20px;
+      font-weight:700;
+      margin-bottom: 12px;
+      display:flex;
+      align-items:center;
+      gap:10px;
+    }
+
+    .tabs{
+      display:flex;
+      gap:10px;
+      overflow-x:auto;
+      padding-bottom:5px;
+      scrollbar-width:none;
+    }
+    .tabs::-webkit-scrollbar{display:none;}
+
+    .tab-btn{
+      border:none;
+      padding:10px 15px;
+      border-radius: 30px;
+      background: rgba(255,255,255,0.2);
+      color:#fff;
+      font-weight:600;
+      cursor:pointer;
+      display:flex;
+      align-items:center;
+      gap:8px;
+      transition:0.25s;
+      white-space:nowrap;
+      border: 1px solid rgba(255,255,255,0.25);
+    }
+
+    .tab-btn.active{
+      background:#fff;
+      color:#3a3a3a;
+      transform: scale(1.03);
+    }
+
+    /* Container */
+    .container{
+      padding:15px;
+      max-width: 650px;
+      margin:auto;
+    }
+
+    /* Title Row */
+    .title-row{
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      margin-top: 12px;
+      margin-bottom: 15px;
+    }
+
+    .title-row h2{
+      font-size:20px;
+      font-weight:700;
+      color:#222;
+      display:flex;
+      align-items:center;
+      gap:10px;
+    }
+
+    .title-row h2 i{
+      color:#6a11cb;
+      background:#ede6ff;
+      padding:8px;
+      border-radius: 12px;
+    }
+
+    .font-controls{
+      display:flex;
+      gap:8px;
+    }
+
+    .font-controls button{
+      border:none;
+      padding:8px 12px;
+      border-radius:10px;
+      font-weight:700;
+      cursor:pointer;
+      background:#fff;
+      box-shadow: 0px 4px 10px rgba(0,0,0,0.08);
+      transition:0.2s;
+    }
+    .font-controls button:active{
+      transform:scale(0.95);
+    }
+
+    /* Input Box */
+    .input-box{
+      background:#fff;
+      padding:15px;
+      border-radius: 16px;
+      box-shadow: 0px 6px 14px rgba(0,0,0,0.08);
+      margin-bottom: 15px;
+    }
+
+    .input-box input{
+      width:100%;
+      border:none;
+      outline:none;
+      font-size:16px;
+      font-weight:600;
+      padding:12px;
+      border-radius: 12px;
+      background:#f4f6ff;
+    }
+
+    /* Cards */
+    .card{
+      background:#fff;
+      padding:14px;
+      border-radius: 16px;
+      box-shadow: 0px 6px 14px rgba(0,0,0,0.08);
+      margin-bottom: 12px;
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      gap:10px;
+      transition:0.2s;
+    }
+
+    .card:hover{
+      transform: translateY(-2px);
+    }
+
+    .nickname{
+      font-size:18px;
+      font-weight:600;
+      color:#222;
+      word-break: break-word;
+      flex:1;
+      padding-right:8px;
+    }
+
+    .copy-btn{
+      border:none;
+      padding:10px 14px;
+      border-radius: 12px;
+      background: #f0e7ff;
+      color:#6a11cb;
+      font-weight:700;
+      cursor:pointer;
+      transition:0.2s;
+      display:flex;
+      align-items:center;
+      gap:7px;
+      min-width: 85px;
+      justify-content:center;
+    }
+
+    .copy-btn:hover{
+      background:#6a11cb;
+      color:#fff;
+    }
+
+    /* Toast */
+    .toast{
+      position: fixed;
+      bottom: 90px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: #222;
+      color: #fff;
+      padding: 12px 18px;
+      border-radius: 12px;
+      opacity: 0;
+      pointer-events:none;
+      transition: 0.3s;
+      font-weight:600;
+      z-index:9999;
+    }
+
+    .toast.show{
+      opacity: 1;
+      bottom: 105px;
+    }
+
+    /* Footer */
+    footer{
+      position: fixed;
+      bottom:0;
+      left:0;
+      width:100%;
+      background:#fff;
+      box-shadow: 0px -4px 15px rgba(0,0,0,0.1);
+      padding: 12px 10px;
+      border-top-left-radius: 18px;
+      border-top-right-radius: 18px;
+    }
+
+    .footer-text{
+      text-align:center;
+      font-weight:700;
+      font-size:14px;
+      color:#333;
+      margin-bottom: 8px;
+    }
+
+    .social-icons{
+      display:flex;
+      justify-content:center;
+      gap:12px;
+    }
+
+    .social-icons a{
+      width:42px;
+      height:42px;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      border-radius: 14px;
+      font-size:18px;
+      color:#fff;
+      text-decoration:none;
+      transition:0.2s;
+    }
+
+    .social-icons a:hover{
+      transform: scale(1.08);
+    }
+
+    .insta{background:linear-gradient(45deg,#f58529,#dd2a7b,#8134af,#515bd4);}
+    .fb{background:#1877f2;}
+    .wa{background:#25d366;}
+    .pin{background:#e60023;}
+
+    @media(max-width:480px){
+      .nickname{font-size:16px;}
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- HEADER -->
+  <header>
+    <div class="app-title">
+      <i class="fa-solid fa-wand-magic-sparkles"></i> Stylish Nickname Maker
+    </div>
+
+    <div class="tabs">
+      <button class="tab-btn active" data-tab="popular"><i class="fa-solid fa-crown"></i> Popular</button>
+      <button class="tab-btn" data-tab="love"><i class="fa-solid fa-heart"></i> Love</button>
+      <button class="tab-btn" data-tab="freefire"><i class="fa-solid fa-fire"></i> Free Fire</button>
+      <button class="tab-btn" data-tab="stylish"><i class="fa-solid fa-star"></i> Stylish</button>
+    </div>
+  </header>
+
+  <div class="container">
+
+    <!-- TITLE ROW -->
+    <div class="title-row">
+      <h2><i class="fa-solid fa-crown"></i> <span id="designTitle">Popular Design</span></h2>
+
+      <div class="font-controls">
+        <button id="decreaseFont">A-</button>
+        <button id="increaseFont">A+</button>
+      </div>
+    </div>
+
+    <!-- INPUT -->
+    <div class="input-box">
+      <input type="text" id="nameInput" placeholder="Enter your name" value="">
+    </div>
+
+    <!-- OUTPUT LIST -->
+    <div id="outputList"></div>
+
+  </div>
+
+  <!-- TOAST -->
+  <div class="toast" id="toast">Copied!</div>
+
+  <!-- FOOTER -->
+  <footer>
+    <div class="footer-text">(づ｡◕‿‿◕｡)づ ♥ Show Love ♥</div>
+    <div class="social-icons">
+      <a href="#" class="insta"><i class="fa-brands fa-instagram"></i></a>
+      <a href="#" class="fb"><i class="fa-brands fa-facebook-f"></i></a>
+      <a href="#" class="wa"><i class="fa-brands fa-whatsapp"></i></a>
+      <a href="#" class="pin"><i class="fa-brands fa-pinterest-p"></i></a>
+    </div>
+  </footer>
+
+  <script>
+    let fontSize = 18;
+
+    const nameInput = document.getElementById("nameInput");
+    const outputList = document.getElementById("outputList");
+    const toast = document.getElementById("toast");
+    const designTitle = document.getElementById("designTitle");
+
+    const tabs = document.querySelectorAll(".tab-btn");
+
+    // 25+ designs per category
+    const designs = {
+      popular: [
+        "꧁༒☬ {name} ☬༒꧂",
+        "★彡{name}彡★",
+        "꧁☆{name}☆꧂",
+        "『{name}』",
+        "░▒▓█ {name} █▓▒░",
+        "☠︎ {name} ☠︎",
+        "༺{name}༻",
+        "⫷ {name} ⫸",
+        "⚡{name}⚡",
+        "☯ {name} ☯",
+        "🔥 {name} 🔥",
+        "👑 {name} 👑",
+        "✿ {name} ✿",
+        "💎 {name} 💎",
+        "༒ {name} ༒",
+        "✦ {name} ✦",
+        "『★』{name}『★』",
+        "★ {name} ★",
+        "༼ つ ◕_◕ ༽つ {name}",
+        "⛥ {name} ⛥",
+        "♛ {name} ♛",
+        "『{name}』ツ",
+        "✧ {name} ✧",
+        "⎝⎝✧{name}✧⎠⎠",
+        "亗 {name} 亗",
+        "🖤 {name} 🖤",
+        "꧁ঔৣ☬{name}☬ঔৣ꧂"
+      ],
+
+      love: [
+        "❤ {name} ❤",
+        "💞 {name} 💞",
+        "💘 {name} 💘",
+        "❥ {name} ❥",
+        "💕 {name} 💕",
+        "🌹 {name} 🌹",
+        "♥ {name} ♥",
+        "💓 {name} 💓",
+        "😘 {name} 😘",
+        "💖 {name} 💖",
+        "🥀 {name} 🥀",
+        "✨ {name} ✨",
+        "💍 {name} 💍",
+        "🌸 {name} 🌸",
+        "༄❤ {name} ❤༄",
+        "『💗』{name}『💗』",
+        "♡ {name} ♡",
+        "🫶 {name} 🫶",
+        "❣ {name} ❣",
+        "💌 {name} 💌",
+        "💋 {name} 💋",
+        "🌷 {name} 🌷",
+        "❤️‍🔥 {name} ❤️‍🔥",
+        "💫 {name} 💫",
+        "🦋 {name} 🦋",
+        "🌙 {name} 🌙",
+        "꧁❤{name}❤꧂"
+      ],
+
+      freefire: [
+        "亗 {name} 亗",
+        "🔥FF {name}🔥",
+        "꧁༒FF {name}༒꧂",
+        "『FF』{name}『PRO』",
+        "⚡{name}⚡FF",
+        "☠ {name} FF ☠",
+        "ᴳᵒᵈ {name}",
+        "『KILLER』{name}",
+        "꧁༺FF KING {name}༻꧂",
+        "Ⓥ {name} FF",
+        "☣ {name} ☣",
+        "『HEADSHOT』{name}",
+        "『DANGER』{name}",
+        "FF么{name}么PRO",
+        "꧁☠︎ {name} ☠︎꧂",
+        "ᶠᶠ {name} 亗",
+        "⚔ {name} ⚔",
+        "『RDX』{name}",
+        "FF | {name} | OP",
+        "꧁༒☬{name} FF☬༒꧂",
+        "▄︻̷̿┻̿═━一 {name}",
+        "💀 {name} 💀",
+        "⚡ FF {name} ⚡",
+        "⫷FF {name}⫸",
+        "꧁༒FF BOSS {name}༒꧂",
+        "🦅 {name} FF 🦅"
+      ],
+
+      stylish: [
+        "𝓢𝓽𝔂𝓵𝓲𝓼𝓱 {name}",
+        "𝕯𝖆𝖗𝖐 {name}",
+        "𝑴𝒓. {name}",
+        "𝒬𝓊𝑒𝑒𝓃 {name}",
+        "𝙆𝙞𝙣𝙜 {name}",
+        "𝕷𝖊𝖌𝖊𝖓𝖉 {name}",
+        "ᵀᴴᴱ {name}",
+        "ᏦᎥᏁᎶ {name}",
+        "ꜱᴛʏʟɪꜱʜ {name}",
+        "꧁𝓣𝓱𝓮 {name}꧂",
+        "『𝕮𝖔𝖔𝖑』{name}",
+        "ツ {name} ツ",
+        "⫷ 𝕾𝖙𝖆𝖗 {name} ⫸",
+        "꧁༺𝓑𝓸𝓼𝓼 {name}༻꧂",
+        "ミ★ {name} ★彡",
+        "✰ {name} ✰",
+        "♕ {name} ♕",
+        "꧁ঔৣ {name} ༒ঔৣ꧂",
+        "『𝓟𝓻𝓸』{name}",
+        "𝓑𝓪𝓭 {name}",
+        "꧁༒ {name} ༒꧂",
+        "𝔸𝕞𝕒𝕫𝕚𝕟𝕘 {name}",
+        "𝙎𝙩𝙮𝙡𝙚 {name}",
+        "𝑺𝒉𝒂𝒅𝒐𝒘 {name}",
+        "꧁★ {name} ★꧂",
+        "⎝⎝✧ 𝓜𝓻 {name} ✧⎠⎠"
+      ]
+    };
+
+    let currentTab = "popular";
+
+    function renderNicknames() {
+      const userName = nameInput.value.trim() || "Your Name";
+
+      outputList.innerHTML = "";
+
+      designs[currentTab].forEach((pattern) => {
+        const nicknameText = pattern.replace("{name}", userName);
+
+        const card = document.createElement("div");
+        card.className = "card";
+
+        const nickname = document.createElement("div");
+        nickname.className = "nickname";
+        nickname.style.fontSize = fontSize + "px";
+        nickname.innerText = nicknameText;
+
+        const copyBtn = document.createElement("button");
+        copyBtn.className = "copy-btn";
+        copyBtn.innerHTML = `<i class="fa-solid fa-copy"></i> Copy`;
+
+        copyBtn.addEventListener("click", () => {
+          navigator.clipboard.writeText(nicknameText);
+          showToast();
+        });
+
+        card.appendChild(nickname);
+        card.appendChild(copyBtn);
+        outputList.appendChild(card);
+      });
+    }
+
+    function showToast() {
+      toast.classList.add("show");
+      setTimeout(() => {
+        toast.classList.remove("show");
+      }, 1200);
+    }
+
+    // Tab switching
+    tabs.forEach(tab => {
+      tab.addEventListener("click", () => {
+        tabs.forEach(t => t.classList.remove("active"));
+        tab.classList.add("active");
+
+        currentTab = tab.dataset.tab;
+
+        if(currentTab === "popular") designTitle.innerText = "Popular Design";
+        if(currentTab === "love") designTitle.innerText = "Love Design";
+        if(currentTab === "freefire") designTitle.innerText = "Free Fire Design";
+        if(currentTab === "stylish") designTitle.innerText = "Stylish Design";
+
+        renderNicknames();
+      });
+    });
+
+    // Input Live Update
+    nameInput.addEventListener("input", renderNicknames);
+
+    // Font size controls
+    document.getElementById("increaseFont").addEventListener("click", () => {
+      fontSize += 2;
+      if(fontSize > 40) fontSize = 40;
+      renderNicknames();
+    });
+
+    document.getElementById("decreaseFont").addEventListener("click", () => {
+      fontSize -= 2;
+      if(fontSize < 12) fontSize = 12;
+      renderNicknames();
+    });
+
+    // Initial Render
+    renderNicknames();
+  </script>
+
+</body>
+</html>
